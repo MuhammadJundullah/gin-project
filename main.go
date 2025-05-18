@@ -9,7 +9,7 @@ import (
 func main () {
 	r := gin.Default()
 
-	db := config.DB()
+	db := config.DB
 
 	route.Api(r, db)
 

@@ -1,34 +1,43 @@
 package config
 
 import (
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func DB() *gorm.DB {
-	// host := "127.0.0.1"
-	// port := "3306"
-	// dbname := "go"
-	// username := "root"
-	// password := ""
+var DB *gorm.DB
 
-	// dsn := username + ":" + password + "@tcp(" + host + ":" + port + ")/" + dbname + "?charset=utf8&parseTime=true&loc=Local"
-
-	dsn := "host=aws-0-ap-southeast-1.pooler.supabase.com " +
-		"user=postgres.aaoeugvpknmcamicqgwu " +
-		"password=NIOYcrDi5V5iofN4 " +
-		"dbname=golang " +
-		"port=5432 " +
-		"sslmode=require " + // karena Supabase pakai SSL
-		"TimeZone=Asia/Jakarta"
-
-	// db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-
+func InitDB() {
+	// Load .env file
+	err := godotenv.Load()
 	if err != nil {
-		panic("Tidak dapat terkoneksi ke database")
+		log.Fatal("Error loading .env file")
 	}
 
-	return db
+	// Ambil env
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
+	sslmode := os.Getenv("DB_SSLMODE")
+	timezone := os.Getenv("DB_TIMEZONE")
+
+	// Bangun dsn postgres
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
+		host, user, password, dbname, port, sslmode, timezone)
+
+	// Connect ke DB
+	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal("Gagal koneksi ke database: ", err)
+	}
+
+	DB = database
+	fmt.Println("✅ Berhasil konek ke database!")
 }
