@@ -13,12 +13,12 @@ import (
 func InitDB() *gorm.DB {
 	// Load file .env
 
-	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
+	
 		err := godotenv.Load()
 			if err != nil {
 				log.Fatal("Gagal memuat file .env")
 			}
-	}
+	
 
 	// Ambil variabel dari environment
 	host := os.Getenv("DB_HOST")

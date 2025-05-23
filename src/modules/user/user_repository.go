@@ -27,7 +27,7 @@ func (ur *UserRepositoryImpl) FindOne(id int) User {
 }
 
 func (ur *UserRepositoryImpl) Save(user User) (*User, error) {
-	result := ur.db.Save(&user)
+	result := ur.db.Save(&user)		
 	if result.Error != nil {
 		return nil, result.Error
 	}
