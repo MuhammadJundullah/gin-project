@@ -12,7 +12,7 @@ type UserController struct {
 	UserService user.UserService
 }
 
-// NewUserController harus return pointer dan tanpa ctx parameter
+
 func NewUserController(userService user.UserService) *UserController {
 	return &UserController{
 		UserService: userService,
